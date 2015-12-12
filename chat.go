@@ -60,9 +60,9 @@ func NewPostMessageParameters() PostMessageParameters {
 	}
 }
 
-func chatRequest(path string, values url.Values, debug bool) (*chatResponseFull, error) {
+func (api *Client) chatRequest(path string, values url.Values, debug bool) (*chatResponseFull, error) {
 	response := &chatResponseFull{}
-	err := post(path, values, response, debug)
+	err := api.post(path, values, response, debug)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (api *Client) DeleteMessage(channel, messageTimestamp string) (string, stri
 		"channel": {channel},
 		"ts":      {messageTimestamp},
 	}
-	response, err := chatRequest("chat.delete", values, api.debug)
+	response, err := api.chatRequest("chat.delete", values, api.debug)
 	if err != nil {
 		return "", "", err
 	}
@@ -138,7 +138,7 @@ func (api *Client) PostMessage(channel, text string, params PostMessageParameter
 		values.Set("mrkdwn", "false")
 	}
 
-	response, err := chatRequest("chat.postMessage", values, api.debug)
+	response, err := api.chatRequest("chat.postMessage", values, api.debug)
 	if err != nil {
 		return "", "", err
 	}
@@ -153,7 +153,7 @@ func (api *Client) UpdateMessage(channel, timestamp, text string) (string, strin
 		"text":    {escapeMessage(text)},
 		"ts":      {timestamp},
 	}
-	response, err := chatRequest("chat.update", values, api.debug)
+	response, err := api.chatRequest("chat.update", values, api.debug)
 	if err != nil {
 		return "", "", "", err
 	}
