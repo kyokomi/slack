@@ -12,7 +12,7 @@ type oAuthResponseFull struct {
 }
 
 // GetOAuthToken retrieves an AccessToken
-func GetOAuthToken(clientID, clientSecret, code, redirectURI string, debug bool) (accessToken string, scope string, err error) {
+func (api *Client) GetOAuthToken(clientID, clientSecret, code, redirectURI string, debug bool) (accessToken string, scope string, err error) {
 	values := url.Values{
 		"client_id":     {clientID},
 		"client_secret": {clientSecret},
@@ -20,7 +20,7 @@ func GetOAuthToken(clientID, clientSecret, code, redirectURI string, debug bool)
 		"redirect_uri":  {redirectURI},
 	}
 	response := &oAuthResponseFull{}
-	err = post("oauth.access", values, response, debug)
+	err = api.post("oauth.access", values, response, debug)
 	if err != nil {
 		return "", "", err
 	}
